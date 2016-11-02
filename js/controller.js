@@ -3,7 +3,7 @@ var todo = angular.module('todo', []);
 todo.filter('startFrom', function(){
   return function(input, start){
     start = +start;
-    // console.log('start='+start);
+    console.log('start='+start);
     return input.slice(start);
   }
 })
