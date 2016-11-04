@@ -1,0 +1,10 @@
+<div class="spisok">
+    <ul>
+        <itemtask ng-repeat="item in data | orderBy:item.item_done | filter: {tag: filtertag} | startFrom: startingItem() | limitTo: itemsPerPage"  ng-class="{'checked': item.item_done}" item="item" modal="modal" data="data"></itemtask>
+    </ul>
+</div>
+<div class="pages">
+    <span class = "pageNumber" ng-disabled="firstPage()" ng-click="pageBack()">&laquo;</span>
+    <span>{{currentPage+1}} из {{numberOfPages()}}</span>
+    <span class = "pageNumber" ng-disabled="lastPage()" ng-click="pageForward()">&raquo;</span>
+</div>

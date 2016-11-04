@@ -2,43 +2,14 @@ var todo = angular.module('todo', []);
 
 todo.filter('startFrom', function(){
   return function(input, start){
-    start = +start;
-    console.log('start='+start);
     return input.slice(start);
   }
 })
-
-
 todo.controller('todoCtrl', function todoCtrl($scope){
-	
-	$scope.currentPage = 0;
-	$scope.itemsPerPage = 5;
 	$scope.filtertag = '';
 	$scope.data = [];
-	$scope.editShow = false;
-	var lenghtItem = 0;
+	$scope.modal = {};
 
-	
-
-  	$scope.firstPage = function() {
-    	return $scope.currentPage == 0;
-  	}
-  	$scope.lastPage = function() {
-    	var lastPageNum = Math.ceil(lenghtItem / $scope.itemsPerPage - 1);
-    	return $scope.currentPage == lastPageNum;
-  	}
-  	$scope.numberOfPages = function(){
-    	return Math.ceil(lenghtItem / $scope.itemsPerPage);
-  	}
-  	$scope.startingItem = function() {
-    	return $scope.currentPage * $scope.itemsPerPage;
-  	}
-  	$scope.pageBack = function() {
-    	$scope.currentPage = $scope.currentPage - 1;
-  	}
-  	$scope.pageForward = function() {
-    	$scope.currentPage = $scope.currentPage + 1;
-  	}
 
 
 	$scope.uniqueTag = function() {
@@ -50,8 +21,6 @@ todo.controller('todoCtrl', function todoCtrl($scope){
 			}
 		return tagScope;
 	}
-
-
 
 	$scope.chengeDone = function(i){
 		var tempobject;
@@ -68,58 +37,22 @@ todo.controller('todoCtrl', function todoCtrl($scope){
 		}
 	}
 
-
 	$scope.addItems = function(text, tag) {
-	 	console.log(text, tag);
-	 	// e.preventDefault();
 	 	$scope.data.unshift({
 	 		"text": $scope.text,
 	 		"tag": $scope.tag,
 	 		"item_done": false
 	 	});
-	 	lenghtItem = $scope.data.length;
 	 	$scope.text = '';
 	 	$scope.tag = '';
 	}
-	$scope.delItems = function( i ) {
-	 	// e.preventDefault();
-	 	$scope.data.splice(i,1);
-	}
-	$scope.editItems = function( i ) {
-	 	// e.preventDefault();
-	 	$scope.editShow = true;
-	 	$scope.edittext = $scope.data[i].text;
-	 	$scope.edittag = $scope.data[i].tag;
-	 	$scope.editid = i;
-	}
-	$scope.editOk = function() {
-	 	// e.preventDefault();
-	 	$scope.editShow = false;
-		i = $scope.editid;
-	 	$scope.data[i].text = $scope.edittext;
-	 	$scope.data[i].tag = $scope.edittag;
-	}
-	$scope.editCansel = function() {
-	 	// e.preventDefault();
-	 	$scope.editShow = false;
-	}
-
-
 
 	$scope.filterItems = function(e) {
-	 	// e.preventDefault();
 	 	$scope.filtertag = e.target.innerText;
-		lenghtItem = 0;
-	 		for (var i = 0; i < $scope.data.length; i++) {	
-				if ($scope.data[i].tag == $scope.filtertag){
-					lenghtItem++;
-				}
-			}
 	}
 	
 	$scope.filterClear = function() {
 		$scope.filtertag = '';
-		lenghtItem = $scope.data.length;
 	}
 
 });
@@ -130,12 +63,16 @@ todo.directive('itemtask', function() {
 		restrict: 'E',
 		templateUrl: 'template/itemTask.html',
 		scope: {
-			item: '='
+			item: '=',
+			modal: '=',
+			data: '='
 		},
 		controller: function ($scope) {
-			console.log($scope.item)
 			$scope.edit = function () {
-
+				$scope.modal.open($scope.item)
+			}
+			$scope.delete = function(data, i) {
+				data.splice(i, 1);
 			}
 		}
 	}
@@ -146,9 +83,56 @@ todo.directive('modal', function() {
 		restrict: 'E',
 		templateUrl: 'template/modal.html',
 		scope: {
+			modal: '='
 		},
 		controller: function ($scope) {
+			$scope.modal.open = function(item) {
+				$scope.opened = true;
+				$scope.buffer_text = item.text;
+				$scope.buffer_tag = item.tag;
+				$scope.item = item;
+			}
+			$scope.cancel = function () {
+				$scope.item.text = $scope.buffer_text;
+				$scope.item.tag = $scope.buffer_tag;
+				$scope.opened = false;
+			}
+			$scope.confirm = function () {
+				$scope.opened = false;
+			}
+		}
+	}
+})
 
+todo.directive('todoTable', function() {
+	return {
+		restrict: 'E',
+		templateUrl: 'template/todoTable.html',
+		scope: {
+			data: '=',
+			itemsPerPage: '='
+		},
+		controller: function ($scope) {
+			$scope.currentPage = 0;
+		  	$scope.firstPage = function() {
+		    	return $scope.currentPage == 0;
+		  	}
+		  	$scope.lastPage = function() {
+		    	var lastPageNum = Math.ceil($scope.data.length / $scope.itemsPerPage - 1);
+		    	return $scope.currentPage == lastPageNum;
+		  	}
+		  	$scope.numberOfPages = function(){
+		    	return Math.ceil($scope.data.length / $scope.itemsPerPage);
+		  	}
+		  	$scope.startingItem = function() {
+		    	return $scope.currentPage * $scope.itemsPerPage;
+		  	}
+		  	$scope.pageBack = function() {
+		    	$scope.currentPage = $scope.currentPage - 1;
+		  	}
+		  	$scope.pageForward = function() {
+		    	$scope.currentPage = $scope.currentPage + 1;
+		  	}
 		}
 	}
 })

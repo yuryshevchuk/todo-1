@@ -3,8 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
-	<script type="text/javascript" src="angular/angular.min.js"></script>
+	<script type="text/javascript" src="angular.min.js"></script>
 	<script type="text/javascript" src="js/controller.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -12,35 +11,19 @@
 	<div class="wraper" ng-controller="todoCtrl">
 		<p>Список дел</p>
 		<div class="inwork">
-			<modal></modal>
+			<modal modal="modal"></modal>
 			<textarea class="writetxt" name="writetext" placeholder="Введите вашу задачу" cols="60" rows="2" ng-model="text"></textarea>
-			
 			<div class="btn" ng-click="addItems(text, tag)">Add Item</div>
-			
 			<select name="" id="addTags" ng-model="tag">
 				<option ng-repeat="item in uniqueTag()">{{item}}</option>
-			</select>
-			
+			</select>			
 			<input type="text" class="tags" placeholder="Введите тэг" ng-model="tag">
 		</div>
-		
-	 	<div class="spisok">
-			<ul>
-			<itemtask ng-repeat="item in data | orderBy:item.item_done | filter: {tag: filtertag} | startFrom: startingItem() | limitTo: itemsPerPage"  ng-class="{'checked': item.item_done}" item="item"></itemtask>
-				<!-- <li class="itemtask" ng-repeat="item in data |filter: {tag: filtertag} | startFrom: startingItem() | limitTo: itemsPerPage"  ng-class="{'checked': item.item_done}"><input type="checkbox" class="check-done" ng-model="item.item_done" ng-click="chengeDone($index)">{{item.text}}<span class="text-tag">{{item.tag}}</span><button class="delete-item" ng-click="delItems($index)">Delete</button><button class="edit-item" ng-click="editItems($index)">Edit</button></li> -->
-			</ul>
-		</div>
-		<div class="pages">
-			<span class = "pageNumber" ng-disabled="firstPage()" ng-click="pageBack()">&laquo;</span>
-		    <span>{{currentPage+1}} из {{numberOfPages()}}</span>
-      		<span class = "pageNumber" ng-disabled="lastPage()" ng-click="pageForward()">&raquo;</span>
-		</div>
+		<todo-table data="data" items-per-page="5"></todo-table>
 		<div class="tagfilterlist">	
 			<a id="filterNon" ng-click="filterClear()">Clear filter</a>
 			<div class="filter"><span class="filter-item" ng-repeat="item in uniqueTag()" ng-click="filterItems($event)">{{item}}</span></div>
 		</div>	
 	</div>
-	<!-- <script  src="storage.js" ></script> -->
-	<!-- <script  src="script.js" ></script> -->
 </body>
 </html>

@@ -1,7 +1,6 @@
-			<div class="edit-frame" ng-class="{'edit-frame-show': editShow}">
-				<input type="text" class="edit-text" ng-model="edittext">
-				<input type="text" class="edit-tag" ng-model="edittag">
-				<p style="display: none" class="edit-id" ng-model="editid"></p>
-				<button class="edit-ok" ng-click="editOk()">Ok</button>
-				<button class="edit-cansel" ng-click="editCansel()">Cansel</button>
-			</div>
+<div class="edit-frame" ng-show="opened">
+	<input type="text" class="edit-text" ng-model="item.text"/>
+	<input type="text" class="edit-tag" ng-model="item.tag"/>
+	<button class="edit-ok" ng-click="confirm()">Ok</button>
+	<button class="edit-cansel" ng-click="cancel()">Cansel</button>
+</div>
